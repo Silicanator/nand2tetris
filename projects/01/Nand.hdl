@@ -1,0 +1,10 @@
+/**
+ * Nand gate: out = not(a.b == a + not(a))
+ */
+
+ CHIP Nand {
+ 	IN a, b;
+ 	OUT out;
+
+ 	BUILTIN Nand;
+ }
