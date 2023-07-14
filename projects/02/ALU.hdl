@@ -43,43 +43,17 @@ CHIP ALU {
 
     PARTS:
 
-    /**
-    //nx and zx operation
-    Mux16(a=x, b=false, sel=zx, out=posx);
-    Not16(in=posx, out=negx);
-    Mux16(a=posx, b=negx, sel=nx, out=x1);
-
-    //ny and zy operation
-    Mux16(a=y, b=false, sel=zy, out=posy);
-    Not16(in=posy, out=negy);
-    Mux16(a=posy, b=negy, sel=ny, out=y1);
-
-    //and and or operations
-    And16(a=x1, b=y1, out=andxy);0
-    Add16(a=x1, b=y1, out=addxy);1
-
-    //f and no and ng operation
-    Mux16(a=andxy, b=addxy, sel=f, out=posout);
-    Not16(in=posout, out=negout);
-    Mux16(a=posout, b=negout, sel=no, out=out, out[0..7]=outlow, out[8..15]=outhi, out[15]=ng);
-
-    //zr and out calculation
-    Or8Way(in=outlow, out=lowor);
-    Or8Way(in=outhi, out=hior);
-    Or(a=lowor, b=hior, out=nzr);
-    Not(in=nzr, out=zr);*/
-
-    Mux16(a=x,b[0..15]=false,sel=zx,out=zdx); //Zero the x
+Mux16(a=x,b[0..15]=false,sel=zx,out=zdx); //Zero the x
 Not16(in=zdx,out=notx);                  //Not the x
 Mux16(a=zdx,b=notx,sel=nx,out=ndx);      //chose x or notx
-// ditto for y
-Mux16(a=y,b[0..15]=false,sel=zy,out=zdy);
+
+Mux16(a=y,b[0..15]=false,sel=zy,out=zdy); /* same for y */
 Not16(in=zdy,out=noty);
 Mux16(a=zdy,b=noty,sel=ny,out=ndy);
 
 Add16(a=ndx,b=ndy,out=xplusy); //x+y
 And16(a=ndx,b=ndy,out=xandy);  //x&y
-Mux16(a=xandy,b=xplusy,sel=f,out=fxy);  //chose function
+Mux16(a=xandy,b=xplusy,sel=f,out=fxy);  //add|and function
 
 Not16(in=fxy,out=nfxy);      //not the output or not
 Mux16(a=fxy,b=nfxy,sel=no,out=oo);  //chose which
